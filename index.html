@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Captcha Solver</title>
+<style>
+  body { font-family: Arial, sans-serif; margin: 2em; }
+  h1 { font-size: 1.5em; }
+  input[type=text] { width: 300px; padding: 0.5em; margin-right: 1em; }
+  button { padding: 0.5em 1em; }
+  #result { margin-top: 2em; font-weight: bold; }
+</style>
+</head>
+<body>
+<h1>Simple CAPTCHA Solver</h1>
+<p>Enter the URL of a CAPTCHA image with the <code>?url=</code> parameter:</p>
+<input type="text" id="captchaUrl" placeholder="e.g., https://alpha.example.com/captcha.png" />
+<button id="solveBtn">Solve CAPTCHA</button>
+<div id="result">Solved Captcha: <span id="captchaText">N/A</span></div>
+<script>
+(function() {
+  const btn = document.getElementById('solveBtn');
+  const captchaTextSpan = document.getElementById('captchaText');
+
+  // Function to extract URL parameter
+  function getUrlParameter(name) {
+    name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+    const regex = new RegExp('[?&]' + name + '=([^&#]*)');
+    const results = regex.exec(window.location.search);
+    return results === null ? null : decodeURIComponent(results[1]);
+  }
+
+  // Pre-fill input if URL parameter is present
+  const presetUrl = getUrlParameter('url');
+  if(presetUrl) {
+    document.getElementById('captchaUrl').value = presetUrl;
+  }
+
+  // Function to simulate solving CAPTCHA via backend
+  function solveCaptcha(imageUrl) {
+    // For demonstration, simulate delay and return dummy text
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        // For testing, assume the captcha text is always "TEST".
+        resolve('TEST');
+      }, 10000); // 10 seconds delay
+    });
+  }
+
+  btn.addEventListener('click', () => {
+    const urlInput = document.getElementById('captchaUrl').value.trim();
+    if(!urlInput) {
+      alert('Please enter a CAPTCHA image URL.');
+      return;
+    }
+    captchaTextSpan.textContent = 'Solving...';
+    solveCaptcha(urlInput).then((text) => {
+      captchaTextSpan.textContent = text;
+    });
+  });
+
+  // Optional: auto-trigger solve if URL parameter exists
+  if(presetUrl) {
+    document.getElementById('solveBtn').click();
+  }
+})();
+</script>
+</body>
+</html>
